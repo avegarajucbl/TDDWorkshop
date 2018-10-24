@@ -1,0 +1,33 @@
+solutionName: TDDWorkShop.sln
+output:
+    artifacts: artifacts
+    publish: publish
+    projects:
+        - id: api
+          path: ./src/TDDWorkShop.Api/TDDWorkShop.Api.csproj
+          generate-build-meta: true
+        - id: acceptance-tests
+          path: ./tests/TDDWorkShop.Tests.Acceptance/TDDWorkShop.Tests.Acceptance.csproj
+          octopus: false
+test:
+  unit: ./**/*.Tests.Unit.csproj
+  integration: ./**/*.Tests.Integration.csproj
+  acceptance: 
+    glob: ./**/*.Tests.Acceptance.csproj
+    packageName: acceptance-tests
+octopus:
+  projectName: TDDWorkShop
+environment:
+  prefix: tddworkshop_
+  vars:
+    APPGROUP: tddworkshop
+    TEAMCITY_URL: https://teamcity.coolblue.eu  #Keep this here for now, but later see if we can get an environment variable across all agents in TC
+    AWS_REGION: eu-west-1
+  secrets:
+    default: &default
+    testing:
+      <<: *default  #merge settings with default, you can override any key like ORACLE_PASSWORD below
+    acceptance:
+      <<: *default  #merge settings with default, you can override any key like ORACLE_PASSWORD below
+    production:
+      <<: *default  #merge settings with default, you can override any key like ORACLE_PASSWORD below
