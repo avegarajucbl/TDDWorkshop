@@ -75,6 +75,8 @@ namespace TDDWorkShop.Api
                     });
 
             services.AddMvc()
+                    //todo : Replace with controller name
+                    //.AddApplicationPart(typeof(<ControllerName>).Assembly)
                     .AddMvcOptions(opt => opt.OutputFormatters.RemoveType<StringOutputFormatter>());
 
             services.AddApiVersioning(options =>
