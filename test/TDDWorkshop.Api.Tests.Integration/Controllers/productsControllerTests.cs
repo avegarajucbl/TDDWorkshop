@@ -11,11 +11,11 @@ using Xunit;
 
 namespace TDDWorkshop.Api.Tests.Integration.Controllers
 {
-    public class productsControllerTests
+    public class ProductsControllerTests
     {
         private TestServer _server;
 
-        public productsControllerTests()
+        public ProductsControllerTests()
         {
             var webHostBuilder = new WebHostBuilder()
                                  .UseStartup(typeof (StartupTestable))
