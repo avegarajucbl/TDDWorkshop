@@ -13,11 +13,7 @@ namespace TDDWorkshop.Api.Tests.Integration
         public StartupTestable(IHostingEnvironment env)
                 : base(env)
         {
-            RegisterOverrides = container =>
-                                {
-                                    container.Options.AllowOverridingRegistrations = true;
-                                    container.Register<IProductsMeasurementUseCase>(() => _usecaseMock.Object);
-                                };
+    
         }
 
         protected override IConfigurationRoot GetConfiguration()
