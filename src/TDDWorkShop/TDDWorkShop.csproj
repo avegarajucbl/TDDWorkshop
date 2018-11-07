@@ -11,4 +11,8 @@
     <PackageReference Include="Coolblue.Utilities.Resilience" Version="1.0.0" />    
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+
 </Project>
