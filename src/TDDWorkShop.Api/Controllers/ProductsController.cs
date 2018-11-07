@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using TDDWorkShop.Api.Requests;
+using TDDWorkShop.Exceptions;
 
 namespace TDDWorkShop.Api.Controllers
 {
-    public class ProductsController
+    public class ProductsController: Controller
     {
         private readonly IProductsMeasurementUseCase _productsMeasurementUse;
 
@@ -20,9 +22,13 @@ namespace TDDWorkShop.Api.Controllers
                 _productsMeasurementUse.Execute(measurementsRequest.ToProductMeasurement());
                 return new OkResult();
             }
-            catch(Exception e)
+            catch(ProductNotFoundException productNotFoundException)
             {
                 return new NotFoundResult();
+            }
+            catch(Exception e)
+            {
+                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
             }
         }
     }

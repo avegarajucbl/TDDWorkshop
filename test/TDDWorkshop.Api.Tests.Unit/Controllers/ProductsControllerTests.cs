@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -18,11 +19,7 @@ namespace TDDWorkshop.Api.Tests.Unit.Controllers
         public void Create_WithAValidInput_ReturnsOk()
         {
             var measurementsRequest = new MeasurementsApiRequest();
-            
-
-            var sut = new ProductsController(_productsMeasurementUseCaseMock.Object);
-
-            var result = sut.Create(measurementsRequest);
+            IActionResult result = ExecuteSut(measurementsRequest);
 
             result.Should().BeEquivalentTo(new OkResult());
         }
@@ -39,7 +36,31 @@ namespace TDDWorkshop.Api.Tests.Unit.Controllers
 
             var result = sut.Create(measurementsRequest);
 
-            result.Should().BeEquivalentTo(new NotFoundResult());
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public void Create_WhenUseCaseThrowsUnknownException_ReturnsInternalServerError()
+        {
+            var measurementsRequest = new MeasurementsApiRequest();
+
+            _productsMeasurementUseCaseMock.Setup(obj => obj.Execute(It.IsAny<ProductsMeasurement>()))
+                                           .Throws<Exception>();
+
+            var sut = new ProductsController(_productsMeasurementUseCaseMock.Object);
+
+            var result = sut.Create(measurementsRequest);
+
+            result.Should().BeOfType<StatusCodeResult>().Which.StatusCode
+                  .Should().Be((int) HttpStatusCode.InternalServerError);
+        }
+
+        private IActionResult ExecuteSut(MeasurementsApiRequest measurementsRequest)
+        {
+            var sut = new ProductsController(_productsMeasurementUseCaseMock.Object);
+
+            var result = sut.Create(measurementsRequest);
+            return result;
         }
     }
 }
