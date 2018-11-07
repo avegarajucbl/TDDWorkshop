@@ -15,6 +15,7 @@ namespace TDDWorkShop.Api.Controllers
             _productsMeasurementUse = productsMeasurementUse;
         }
 
+        [HttpPost("api/createMeasurements")]
         public IActionResult Create(MeasurementsApiRequest measurementsRequest)
         {
             try

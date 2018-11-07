@@ -39,12 +39,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.PlatformAbstractions;
+using TDDWorkShop.Api.Controllers;
 
 namespace TDDWorkShop.Api
 {
     public class Startup
     {
-        public static string AppName => throw new NotImplementedException("You must fill in an application name. Remove this exception and replace with `return \"your_application_name\"`");
+        public static string AppName => "ProductsApi";
 
         private ILogger _logger;
         private MonitoringEvents _monitoringEvents;
@@ -76,7 +77,7 @@ namespace TDDWorkShop.Api
 
             services.AddMvc()
                     //todo : Replace with controller name
-                    //.AddApplicationPart(typeof(<ControllerName>).Assembly)
+                    .AddApplicationPart(typeof(ProductsController).Assembly)
                     .AddMvcOptions(opt => opt.OutputFormatters.RemoveType<StringOutputFormatter>());
 
             services.AddApiVersioning(options =>
@@ -135,7 +136,7 @@ namespace TDDWorkShop.Api
             _settings = new WebServiceSettings(configuration);
         }
 
-        private IConfigurationRoot GetConfiguration()
+        protected virtual IConfigurationRoot GetConfiguration()
         {
             var personalGlobalConfigKey = $"{AppName}_global_config_file";
             var personalConfigKey = $"{AppName}_config_file";
@@ -207,6 +208,8 @@ namespace TDDWorkShop.Api
 
             _persistenceAdapter.Register(_container);
             _container.RegisterCollection(_persistenceAdapter.GetHealthTests());
+
+            _container.Register<IProductsMeasurementUseCase>(()=> new ProductMeasurementUseCase());
 
             _container.RegisterMvcControllers(app);
 
